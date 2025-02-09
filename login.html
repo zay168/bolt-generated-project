@@ -124,13 +124,16 @@
         async function initializeApp() {
             try {
                 // Étape 1 : Charger sql.js
-                updateLoadingProgress(25, "Chargement de sql.js...");
+                updateLoadingProgress(10, "Début du chargement de sql.js...");
                 await loadSQLJS();
+                updateLoadingProgress(25, "sql.js chargé.");
 
                 // Étape 2 : Initialiser la base de données
-                updateLoadingProgress(50, "Initialisation de la base de données...");
+                updateLoadingProgress(30, "Début de l'initialisation de la base de données...");
                 const dbModule = await import('./db.js'); // Import dynamique
+                updateLoadingProgress(40, "Module db.js importé.");
                 const dbInitResult = await dbModule.initDB();
+                updateLoadingProgress(50, "Base de données initialisée.");
 
                 if (!dbInitResult) {
                     console.error("L'initialisation de la base de données a échoué.");

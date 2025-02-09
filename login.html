@@ -115,6 +115,7 @@
                 };
                 script.onerror = (error) => {
                     console.error("Erreur lors du chargement de sql.js", error);
+                    loadingMessage.textContent = "Erreur lors du chargement de sql.js: " + error.message;
                     reject(error);
                 };
                 document.head.appendChild(script);
@@ -130,14 +131,20 @@
 
                 // Étape 2 : Initialiser la base de données
                 updateLoadingProgress(30, "Début de l'initialisation de la base de données...");
-                const dbModule = await import('./db.js'); // Import dynamique
-                updateLoadingProgress(40, "Module db.js importé.");
-                const dbInitResult = await dbModule.initDB();
-                updateLoadingProgress(50, "Base de données initialisée.");
+                try {
+                    const dbModule = await import('./db.js'); // Import dynamique
+                    updateLoadingProgress(40, "Module db.js importé.");
+                    const dbInitResult = await dbModule.initDB();
+                    updateLoadingProgress(50, "Base de données initialisée.");
 
-                if (!dbInitResult) {
-                    console.error("L'initialisation de la base de données a échoué.");
-                    loadingMessage.textContent = "Erreur lors de l'initialisation de la base de données.";
+                    if (!dbInitResult) {
+                        console.error("L'initialisation de la base de données a échoué.");
+                        loadingMessage.textContent = "Erreur lors de l'initialisation de la base de données.";
+                        return;
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de l'initialisation de la base de données", error);
+                    loadingMessage.textContent = "Erreur lors de l'initialisation de la base de données: " + error.message;
                     return;
                 }
 

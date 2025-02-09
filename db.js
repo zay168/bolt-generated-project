@@ -3,19 +3,25 @@ const initSqlJs = require('sql.js');
 let db;
 
 async function initDB() {
-  const SQL = await initSqlJs({
-    locateFile: file => `https://sql.js.org/dist/${file}`
-  });
-  db = new SQL.Database();
+  try {
+    const SQL = await initSqlJs({
+      locateFile: file => `https://sql.js.org/dist/${file}`
+    });
+    db = new SQL.Database();
 
-  db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL,
-      email TEXT NOT NULL,
-      password TEXT NOT NULL
-    )
-  `);
+    db.run(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        email TEXT NOT NULL,
+        password TEXT NOT NULL
+      )
+    `);
+    return true;
+  } catch (error) {
+    console.error("Erreur lors de l'initialisation de la base de données :", error);
+    return false;
+  }
 }
 
 async function insertUser(username, email, password) {

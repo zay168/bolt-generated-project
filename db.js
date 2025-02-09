@@ -5,7 +5,9 @@ async function initDB(SQL) {
     const sql = await SQL.default({
       locateFile: file => `https://sql.js.org/dist/${file}`
     });
-    db = new sql.Database();
+
+    // Initialize the database using a worker
+    db = await new sql.Database();
 
     db.run(`
       CREATE TABLE IF NOT EXISTS users (

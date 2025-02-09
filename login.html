@@ -102,7 +102,7 @@
             loadProgress = progress;
             loadingProgress.style.width = `${progress}%`;
             loadingMessage.textContent = message;
-            console.log("Loading:", progress, message); // Ajout d'un log pour le débogage
+            console.log("Loading:", progress, message);
         }
 
         async function initializeApp() {
@@ -123,9 +123,8 @@
                 // Étape 2 : Initialiser la base de données
                 updateLoadingProgress(30, "Début de l'initialisation de la base de données...");
                 try {
-                    const dbModule = await import('./db.js'); // Import dynamique
+                    const dbModule = await import('./db.js');
                     updateLoadingProgress(40, "Module db.js importé.");
-                    // Modify initDB to accept the SQL object
                     const dbInitResult = await dbModule.initDB(SQL);
                     updateLoadingProgress(50, "Base de données initialisée.");
 

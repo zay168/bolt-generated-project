@@ -1,13 +1,11 @@
-const initSqlJs = require('sql.js');
-
 let db;
 
-async function initDB() {
+async function initDB(SQL) {
   try {
-    const SQL = await initSqlJs({
+    const sql = await SQL.default({
       locateFile: file => `https://sql.js.org/dist/${file}`
     });
-    db = new SQL.Database();
+    db = new sql.Database();
 
     db.run(`
       CREATE TABLE IF NOT EXISTS users (

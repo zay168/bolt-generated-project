@@ -25,24 +25,34 @@ async function initDB() {
 }
 
 async function insertUser(username, email, password) {
-  db.run(`
-    INSERT INTO users (username, email, password)
-    VALUES (?, ?, ?)
-  `, [username, email, password]);
+  try {
+    db.run(`
+      INSERT INTO users (username, email, password)
+      VALUES (?, ?, ?)
+    `, [username, email, password]);
+  } catch (error) {
+    console.error("Erreur lors de l'insertion de l'utilisateur :", error);
+    throw error; // Re-throw the error to be caught in the calling function
+  }
 }
 
 async function getUserByUsername(username) {
-  const stmt = db.prepare(`
-    SELECT * FROM users WHERE username = ?
-  `);
-  stmt.bind([username]);
+  try {
+    const stmt = db.prepare(`
+      SELECT * FROM users WHERE username = ?
+    `);
+    stmt.bind([username]);
 
-  let result = null;
-  while (stmt.step()) { //
-    result = stmt.getAsObject();
+    let result = null;
+    while (stmt.step()) {
+      result = stmt.getAsObject();
+    }
+    stmt.free();
+    return result;
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'utilisateur :", error);
+    return null;
   }
-  stmt.free();
-  return result;
 }
 
 module.exports = {

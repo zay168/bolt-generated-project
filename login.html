@@ -39,6 +39,7 @@
         <div id="message" style="display: none; text-align: center; margin-top: 10px;"></div>
     </div>
 
+    <script src="storage.js"></script>
     <script>
         const signupForm = document.querySelector('.signup-form');
         const loginForm = document.querySelector('.login-form');
@@ -69,9 +70,7 @@
             const password = document.getElementById('signup-password').value;
 
             // Stockage dans localStorage (NON SÉCURISÉ pour les mots de passe réels)
-            localStorage.setItem('username', username);
-            localStorage.setItem('email', email);
-            localStorage.setItem('password', password); // NE JAMAIS faire ça en production
+            storeCredentials(username, email, password);
 
             messageDiv.textContent = "Inscription réussie (stockée localement) !";
             messageDiv.style.display = 'block';

@@ -15,9 +15,11 @@
             height: 100%;
             background-color: #fff;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            text-align: center; /* Centre le texte horizontalement */
         }
 
         #loading-bar {
@@ -26,6 +28,7 @@
             background-color: #ddd;
             border-radius: 5px;
             overflow: hidden;
+            margin-bottom: 20px; /* Ajoute de l'espace sous la barre */
         }
 
         #loading-progress {
@@ -33,6 +36,12 @@
             height: 100%;
             background-color: #f39c12;
             transition: width 0.1s ease-in-out;
+        }
+
+        #loading-message {
+            font-size: 16px;
+            color: #666;
+            margin-top: 10px;
         }
 
         /* Cacher le contenu principal jusqu'à ce que tout soit chargé */
@@ -46,6 +55,7 @@
         <div id="loading-bar">
             <div id="loading-progress"></div>
         </div>
+        <div id="loading-message">Chargement en cours...</div>
     </div>
 
     <div id="content" class="wrapper">
@@ -84,12 +94,14 @@
         const loadingProgress = document.getElementById('loading-progress');
         const loadingContainer = document.getElementById('loading-container');
         const content = document.getElementById('content');
+        const loadingMessage = document.getElementById('loading-message');
 
         let loadProgress = 0;
 
-        function updateLoadingProgress(progress) {
+        function updateLoadingProgress(progress, message) {
             loadProgress = progress;
             loadingProgress.style.width = `${progress}%`;
+            loadingMessage.textContent = message;
         }
 
         async function loadSQLJS() {
@@ -105,25 +117,29 @@
         async function initializeApp() {
             try {
                 // Étape 1 : Charger sql.js
-                updateLoadingProgress(25);
+                updateLoadingProgress(25, "Chargement de sql.js...");
                 await loadSQLJS();
 
                 // Étape 2 : Initialiser la base de données
-                updateLoadingProgress(75);
+                updateLoadingProgress(50, "Initialisation de la base de données...");
                 const { initDB } = await import('./db.js'); // Import dynamique
                 const dbInitResult = await initDB();
 
                 if (!dbInitResult) {
                     console.error("L'initialisation de la base de données a échoué.");
+                    loadingMessage.textContent = "Erreur lors de l'initialisation de la base de données.";
                     return;
                 }
 
-                // Étape 3 : Afficher le contenu principal
-                updateLoadingProgress(100);
+                // Étape 3 : Préparation de l'interface utilisateur
+                updateLoadingProgress(75, "Préparation de l'interface utilisateur...");
+
+                // Étape 4 : Afficher le contenu principal
+                updateLoadingProgress(100, "Chargement terminé.");
                 loadingContainer.style.display = 'none';
                 content.style.display = 'block';
 
-                // Étape 4 : Ajouter les listeners d'événements
+                // Étape 5 : Ajouter les listeners d'événements
                 const signupForm = document.querySelector('.signup-form');
                 const loginForm = document.querySelector('.login-form');
                 const signupLink = document.getElementById('signup-link');
@@ -163,6 +179,7 @@
                 });
             } catch (error) {
                 console.error("Erreur lors de l'initialisation de l'application :", error);
+                loadingMessage.textContent = "Erreur lors du chargement de l'application.";
             }
         }
 

@@ -111,7 +111,7 @@
                 updateLoadingProgress(10, "Chargement de sql.js...");
                 let SQL;
                 try {
-                    SQL = await import('sql.js');
+                    SQL = await import('./node_modules/sql.js/dist/sql-wasm.js');
                     console.log("sql.js chargé avec succès");
                     updateLoadingProgress(25, "sql.js chargé.");
                 } catch (error) {

@@ -5,9 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion/Inscription - TEAMZ Community</title>
     <link rel="stylesheet" href="login.css">
+    <style>
+        /* Styles pour la barre de chargement */
+        #loading-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #loading-bar {
+            width: 50%;
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #loading-progress {
+            width: 0%;
+            height: 100%;
+            background-color: #f39c12;
+            transition: width 0.1s ease-in-out;
+        }
+
+        /* Cacher le contenu principal jusqu'à ce que tout soit chargé */
+        #content {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="wrapper">
+    <div id="loading-container">
+        <div id="loading-bar">
+            <div id="loading-progress"></div>
+        </div>
+    </div>
+
+    <div id="content" class="wrapper">
         <h2>Connexion / Inscription</h2>
 
         <form class="form login-form">
@@ -42,55 +83,72 @@
     <script src="sql.js"></script>
     <script src="db.js"></script>
     <script>
-        const signupForm = document.querySelector('.signup-form');
-        const loginForm = document.querySelector('.login-form');
-        const signupLink = document.getElementById('signup-link');
-        const loginLink = document.getElementById('login-link');
-        const signupButton = document.getElementById('signup-button');
-        const messageDiv = document.getElementById('message');
+        const loadingProgress = document.getElementById('loading-progress');
+        const loadingContainer = document.getElementById('loading-container');
+        const content = document.getElementById('content');
 
-        let dbInitialized = false;
+        let loadProgress = 0;
 
-        // Initialize the database
-        initDB().then(() => {
-            dbInitialized = true;
-        });
+        function updateLoadingProgress(progress) {
+            loadProgress = progress;
+            loadingProgress.style.width = `${progress}%`;
+        }
 
-        signupLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupForm.style.display = 'block';
-            loginForm.style.display = 'none';
-            messageDiv.style.display = 'none'; // Cacher les messages précédents
-        });
+        async function initializeApp() {
+            // Étape 1 : Initialiser la base de données
+            updateLoadingProgress(25);
+            await initDB();
 
-        loginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginForm.style.display = 'block';
-            signupForm.style.display = 'none';
-            messageDiv.style.display = 'none'; // Cacher les messages précédents
-        });
+            // Étape 2 : Charger les autres ressources (simulé)
+            updateLoadingProgress(75);
+            //await new Promise(resolve => setTimeout(resolve, 500)); // Simuler un chargement
 
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+            // Étape 3 : Afficher le contenu principal
+            updateLoadingProgress(100);
+            loadingContainer.style.display = 'none';
+            content.style.display = 'block';
 
-            if (!dbInitialized) {
-                messageDiv.textContent = "La base de données n'est pas encore initialisée. Veuillez réessayer dans quelques secondes.";
+            // Étape 4 : Ajouter les listeners d'événements
+            const signupForm = document.querySelector('.signup-form');
+            const loginForm = document.querySelector('.login-form');
+            const signupLink = document.getElementById('signup-link');
+            const loginLink = document.getElementById('login-link');
+            const signupButton = document.getElementById('signup-button');
+            const messageDiv = document.getElementById('message');
+
+            signupLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                signupForm.style.display = 'block';
+                loginForm.style.display = 'none';
+                messageDiv.style.display = 'none'; // Cacher les messages précédents
+            });
+
+            loginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                messageDiv.style.display = 'none'; // Cacher les messages précédents
+            });
+
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const username = document.getElementById('signup-username').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+
+                // Stockage dans la base de données SQLite
+                await insertUser(username, email, password);
+
+                messageDiv.textContent = "Inscription réussie (stockée dans la base de données) !";
                 messageDiv.style.display = 'block';
-                return;
-            }
+                signupForm.style.display = 'none';
+                loginForm.style.display = 'block'; // Afficher le formulaire de connexion après l'inscription
+            });
+        }
 
-            const username = document.getElementById('signup-username').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-
-            // Stockage dans la base de données SQLite
-            await insertUser(username, email, password);
-
-            messageDiv.textContent = "Inscription réussie (stockée dans la base de données) !";
-            messageDiv.style.display = 'block';
-            signupForm.style.display = 'none';
-            loginForm.style.display = 'block'; // Afficher le formulaire de connexion après l'inscription
-        });
+        // Démarrer l'initialisation
+        initializeApp();
     </script>
 </body>
 </html>

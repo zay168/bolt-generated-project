@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion/Inscription - TEAMZ Community</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="wrapper">
+        <h2>Connexion / Inscription</h2>
+
+        <form class="form login-form">
+            <label for="login-username">Nom d'utilisateur :</label>
+            <input type="text" id="login-username" name="username" required>
+
+            <label for="login-password">Mot de passe :</label>
+            <input type="password" id="login-password" name="password" required>
+
+            <button type="submit">Se connecter</button>
+        </form>
+
+        <form class="form signup-form">
+            <label for="signup-username">Nom d'utilisateur :</label>
+            <input type="text" id="signup-username" name="username" required>
+
+            <label for="signup-email">Email :</label>
+            <input type="email" id="signup-email" name="email" required>
+
+            <label for="signup-password">Mot de passe :</label>
+            <input type="password" id="signup-password" name="password" required>
+
+            <button type="submit" id="signup-button">S'inscrire</button>
+        </form>
+
+        <p>Pas encore de compte ? <a href="#" id="signup-link">S'inscrire</a></p>
+        <p>Déjà un compte ? <a href="#" id="login-link">Se connecter</a></p>
+
+        <div id="message" style="display: none; text-align: center; margin-top: 10px;"></div>
+    </div>
+
+    <script>
+        const signupForm = document.querySelector('.signup-form');
+        const loginForm = document.querySelector('.login-form');
+        const signupLink = document.getElementById('signup-link');
+        const loginLink = document.getElementById('login-link');
+        const signupButton = document.getElementById('signup-button');
+        const messageDiv = document.getElementById('message');
+
+        signupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupForm.style.display = 'block';
+            loginForm.style.display = 'none';
+            messageDiv.style.display = 'none'; // Cacher les messages précédents
+        });
+
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
+            messageDiv.style.display = 'none'; // Cacher les messages précédents
+        });
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            // Stockage dans localStorage (NON SÉCURISÉ pour les mots de passe réels)
+            localStorage.setItem('username', username);
+            localStorage.setItem('email', email);
+            localStorage.setItem('password', password); // NE JAMAIS faire ça en production
+
+            messageDiv.textContent = "Inscription réussie (stockée localement) !";
+            messageDiv.style.display = 'block';
+            signupForm.style.display = 'none';
+            loginForm.style.display = 'block'; // Afficher le formulaire de connexion après l'inscription
+        });
+    </script>
+</body>
+</html>

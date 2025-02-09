@@ -1,0 +1,110 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom, #f7f7f7, #fff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.wrapper {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    max-width: 450px;
+    width: 90%;
+    transition: transform 0.2s ease-in-out;
+}
+
+.wrapper:hover {
+    transform: translateY(-3px);
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+label {
+    font-weight: 500;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: #f39c12;
+    box-shadow: 0 2px 4px rgba(243, 156, 18, 0.2);
+}
+
+button {
+    background-color: #f39c12;
+    color: #fff;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button:hover {
+    background-color: #d35400;
+    transform: scale(1.03);
+}
+
+.signup-form {
+    display: none;
+}
+
+p, .span {
+    color: #777;
+    font-size: 14px;
+    text-align: center;
+}
+
+.span {
+    color: #f39c12;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.span:hover {
+    color: #d35400;
+}
+
+a {
+    color: #f39c12;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #d35400;
+}
